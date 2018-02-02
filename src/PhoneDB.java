@@ -1,3 +1,5 @@
+import com.sun.javafx.binding.StringFormatter;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PhoneDB {
+    final static String PHONE_ABSCENT = "Такого ФИО в БД нет";
+
     public static void main(String[] args) throws IOException{
         HashMap<String,ArrayList<String>> phoneDB = getPhoneDB();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -13,7 +17,12 @@ public class PhoneDB {
         String fio = br.readLine();
 
         Map.Entry<String,ArrayList<String>> record = findRecord(fio);
-        printRecord(record);
+        if (record!=null){
+            printRecord(record);
+        }else{
+            System.out.println(PHONE_ABSCENT);
+        }
+
     }
 
     public static HashMap<String,ArrayList<String>>  getPhoneDB(){
@@ -38,7 +47,14 @@ public class PhoneDB {
     }
 
     public static void printRecord(Map.Entry<String,ArrayList<String>> record){
-
+        if (record.getValue().size()==0){
+            System.out.println(PHONE_ABSCENT);
+            return;
+        }
+        int i=1;
+        for(String tel:record.getValue()){
+            System.out.println(String.format("%d. %s",i++,tel));
+        }
     }
 
     public static Map.Entry<String,ArrayList<String>> findRecord(String fio){
