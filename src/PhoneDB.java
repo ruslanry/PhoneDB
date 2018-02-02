@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PhoneDB {
-    final static String PHONE_ABSCENT = "Такого ФИО в БД нет";
+    private final static String PHONE_ABSCENT = "Такого ФИО в БД нет";
+    private static HashMap<String,ArrayList<String>> phoneDB = getPhoneDB();
 
     public static void main(String[] args) throws IOException{
-        HashMap<String,ArrayList<String>> phoneDB = getPhoneDB();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Укажите имя в формате Фамилия И.О.: ");
         String fio = br.readLine();
@@ -25,7 +25,7 @@ public class PhoneDB {
 
     }
 
-    public static HashMap<String,ArrayList<String>>  getPhoneDB(){
+    private static HashMap<String,ArrayList<String>>  getPhoneDB(){
         HashMap<String,ArrayList<String>> ret = new HashMap<String,ArrayList<String>>();
 
         ArrayList<String> phones = new ArrayList<String>();
@@ -43,10 +43,14 @@ public class PhoneDB {
         phones.add("+8 800 2000 000");
         ret.put("Сидоров С.С.",phones);
 
+        //Пользователь без телефонов
+        phones = new ArrayList<String>();
+        ret.put("Кузнецов К.К.",phones);
+
         return ret;
     }
 
-    public static void printRecord(Map.Entry<String,ArrayList<String>> record){
+    private static void printRecord(Map.Entry<String,ArrayList<String>> record){
         if (record.getValue().size()==0){
             System.out.println(PHONE_ABSCENT);
             return;
@@ -57,7 +61,15 @@ public class PhoneDB {
         }
     }
 
-    public static Map.Entry<String,ArrayList<String>> findRecord(String fio){
-        return null;
+    private static Map.Entry<String,ArrayList<String>> findRecord(String fio){
+        Map.Entry<String,ArrayList<String>> ret=null;
+        for(Map.Entry<String,ArrayList<String>> currRecord:phoneDB.entrySet()){
+            if(currRecord.getKey().toLowerCase().equals(fio.toLowerCase())){
+                ret=currRecord;
+                break;
+            }
+        }
+
+        return ret;
     }
 }
