@@ -1,31 +1,20 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class PhoneDB {
     private final static String PHONE_ABSCENT = "Такого ФИО в БД нет";
-    private final static String PROMPT_FIO = "Укажите имя в формате Фамилия И.О.: ";
-    private static HashMap<String,ArrayList<String>> phoneDB = getPhoneDB();
 
-    public static void main(String[] args) throws IOException{
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print(PROMPT_FIO);
-        String fio="";
-        while(fio.length()==0){
-            fio=br.readLine();
-        }
+    private HashMap<String,ArrayList<String>> phoneDB = getPhoneDB();
 
+    public void findAndPrint(String fio){
         Map.Entry<String,ArrayList<String>> record = findRecord(fio);
         if (record!=null){
             printRecord(record);
         }else System.out.println(PHONE_ABSCENT);
-
     }
 
-    private static HashMap<String,ArrayList<String>>  getPhoneDB(){
+    private HashMap<String,ArrayList<String>>  getPhoneDB(){
         HashMap<String,ArrayList<String>> ret = new HashMap<String,ArrayList<String>>();
 
         ArrayList<String> phones = new ArrayList<String>();
@@ -50,7 +39,7 @@ public class PhoneDB {
         return ret;
     }
 
-    private static void printRecord(Map.Entry<String,ArrayList<String>> record){
+    private void printRecord(Map.Entry<String,ArrayList<String>> record){
         if (record.getValue()==null || record.getValue().size()==0){
             System.out.println(PHONE_ABSCENT);
             return;
@@ -61,7 +50,7 @@ public class PhoneDB {
         }
     }
 
-    private static Map.Entry<String,ArrayList<String>> findRecord(String fio){
+    private Map.Entry<String,ArrayList<String>> findRecord(String fio){
         for(Map.Entry<String,ArrayList<String>> currRecord:phoneDB.entrySet()){
             if(currRecord.getKey().toLowerCase().equals(fio.toLowerCase())){
                 return currRecord;
