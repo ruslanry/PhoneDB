@@ -1,5 +1,3 @@
-import com.sun.javafx.binding.StringFormatter;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,19 +7,21 @@ import java.util.Map;
 
 public class PhoneDB {
     private final static String PHONE_ABSCENT = "Такого ФИО в БД нет";
+    private final static String PROMPT_FIO = "Укажите имя в формате Фамилия И.О.: ";
     private static HashMap<String,ArrayList<String>> phoneDB = getPhoneDB();
 
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Укажите имя в формате Фамилия И.О.: ");
-        String fio = br.readLine();
+        System.out.print(PROMPT_FIO);
+        String fio="";
+        while(fio.length()==0){
+            fio=br.readLine();
+        }
 
         Map.Entry<String,ArrayList<String>> record = findRecord(fio);
         if (record!=null){
             printRecord(record);
-        }else{
-            System.out.println(PHONE_ABSCENT);
-        }
+        }else System.out.println(PHONE_ABSCENT);
 
     }
 
@@ -51,7 +51,7 @@ public class PhoneDB {
     }
 
     private static void printRecord(Map.Entry<String,ArrayList<String>> record){
-        if (record.getValue().size()==0){
+        if (record.getValue()==null || record.getValue().size()==0){
             System.out.println(PHONE_ABSCENT);
             return;
         }
@@ -62,14 +62,11 @@ public class PhoneDB {
     }
 
     private static Map.Entry<String,ArrayList<String>> findRecord(String fio){
-        Map.Entry<String,ArrayList<String>> ret=null;
         for(Map.Entry<String,ArrayList<String>> currRecord:phoneDB.entrySet()){
             if(currRecord.getKey().toLowerCase().equals(fio.toLowerCase())){
-                ret=currRecord;
-                break;
+                return currRecord;
             }
         }
-
-        return ret;
+        return null;
     }
 }
